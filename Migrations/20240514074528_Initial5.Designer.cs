@@ -3,6 +3,7 @@ using ClinicsManagementSystem.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClinicsManagementSystem.Migrations
 {
     [DbContext(typeof(CMSContext))]
-    partial class CMSContextModelSnapshot : ModelSnapshot
+    [Migration("20240514074528_Initial5")]
+    partial class Initial5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,15 +49,10 @@ namespace ClinicsManagementSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClinicId"));
 
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ClinicId");
-
-                    b.HasIndex("CityId");
 
                     b.ToTable("Clinics");
                 });
@@ -101,22 +99,6 @@ namespace ClinicsManagementSystem.Migrations
                     b.HasKey("PatientsClinicsId");
 
                     b.ToTable("PatientsClinics");
-                });
-
-            modelBuilder.Entity("ClinicsSystem.Models.Clinic", b =>
-                {
-                    b.HasOne("ClinicsSystem.Models.City", "City")
-                        .WithMany("Clinics")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("City");
-                });
-
-            modelBuilder.Entity("ClinicsSystem.Models.City", b =>
-                {
-                    b.Navigation("Clinics");
                 });
 #pragma warning restore 612, 618
         }

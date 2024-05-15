@@ -3,6 +3,7 @@ using ClinicsManagementSystem.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClinicsManagementSystem.Migrations
 {
     [DbContext(typeof(CMSContext))]
-    partial class CMSContextModelSnapshot : ModelSnapshot
+    [Migration("20240514085102_Initial9")]
+    partial class Initial9
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,7 +49,7 @@ namespace ClinicsManagementSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClinicId"));
 
-                    b.Property<int>("CityId")
+                    b.Property<int>("Clinic")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -54,7 +57,7 @@ namespace ClinicsManagementSystem.Migrations
 
                     b.HasKey("ClinicId");
 
-                    b.HasIndex("CityId");
+                    b.HasIndex("Clinic");
 
                     b.ToTable("Clinics");
                 });
@@ -107,7 +110,7 @@ namespace ClinicsManagementSystem.Migrations
                 {
                     b.HasOne("ClinicsSystem.Models.City", "City")
                         .WithMany("Clinics")
-                        .HasForeignKey("CityId")
+                        .HasForeignKey("Clinic")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

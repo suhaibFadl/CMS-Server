@@ -134,3 +134,4 @@ C:\Users\Suhaib Fadl\source\repos\ClinicsManagementSystem\ClinicsManagementSyste
 C:\Users\Suhaib Fadl\source\repos\ClinicsManagementSystem\ClinicsManagementSystem\obj\Debug\net8.0\ClinicsManagementSystem.pdb
 C:\Users\Suhaib Fadl\source\repos\ClinicsManagementSystem\ClinicsManagementSystem\obj\Debug\net8.0\ClinicsManagementSystem.genruntimeconfig.cache
 C:\Users\Suhaib Fadl\source\repos\ClinicsManagementSystem\ClinicsManagementSystem\obj\Debug\net8.0\ref\ClinicsManagementSystem.dll
+C:\Users\Suhaib Fadl\source\repos\ClinicsManagementSystem\ClinicsManagementSystem\obj\Debug\net8.0\ClinicsManagementSystem.sourcelink.json
