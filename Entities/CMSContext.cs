@@ -27,7 +27,7 @@ namespace ClinicsManagementSystem.Entities
         //    modelBuilder.Entity<City>()
         //        .HasMany(o => o.Clinics)             // Order has many OrderItems
         //        .WithOne(oi => oi.City)                 // OrderItem has one Order
-        //        .HasForeignKey(oi => oi.City.CityId);        // Foreign key is OrderId in OrderItem
+        //        .HasForeignKey(oi => oi.City!.CityId);        // Foreign key is OrderId in OrderItem
         //}
     }
 }
