@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClinicsManagementSystem.Migrations
 {
     [DbContext(typeof(CMSContext))]
-    [Migration("20240515183125_initial")]
-    partial class initial
+    [Migration("20240516102328_Initial2")]
+    partial class Initial2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -89,19 +89,27 @@ namespace ClinicsManagementSystem.Migrations
 
             modelBuilder.Entity("ClinicsSystem.Models.PatientsClinics", b =>
                 {
-                    b.Property<int>("PatientsClinicsId")
+                    b.Property<int>("FileNo")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PatientsClinicsId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FileNo"));
 
-                    b.Property<int>("FileNo")
+                    b.Property<int>("ClinicId")
                         .HasColumnType("int");
 
                     b.Property<int>("FileStatus")
                         .HasColumnType("int");
 
-                    b.HasKey("PatientsClinicsId");
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FileNo");
+
+                    b.HasIndex("ClinicId");
+
+                    b.HasIndex("PatientId")
+                        .IsUnique();
 
                     b.ToTable("PatientsClinics");
                 });
@@ -117,9 +125,33 @@ namespace ClinicsManagementSystem.Migrations
                     b.Navigation("City");
                 });
 
+            modelBuilder.Entity("ClinicsSystem.Models.PatientsClinics", b =>
+                {
+                    b.HasOne("ClinicsSystem.Models.Clinic", "Clinic")
+                        .WithMany()
+                        .HasForeignKey("ClinicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClinicsSystem.Models.Patient", "Patient")
+                        .WithOne("PatientsClinics")
+                        .HasForeignKey("ClinicsSystem.Models.PatientsClinics", "PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Clinic");
+
+                    b.Navigation("Patient");
+                });
+
             modelBuilder.Entity("ClinicsSystem.Models.City", b =>
                 {
                     b.Navigation("Clinics");
+                });
+
+            modelBuilder.Entity("ClinicsSystem.Models.Patient", b =>
+                {
+                    b.Navigation("PatientsClinics");
                 });
 #pragma warning restore 612, 618
         }

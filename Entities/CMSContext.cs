@@ -19,7 +19,21 @@ namespace ClinicsManagementSystem.Entities
             modelBuilder.Entity<Clinic>()
                 .HasOne(c => c.City) // Clinic has one City
                 .WithMany(city => city.Clinics) // City has many Clinics
-                .HasForeignKey(c => c.CityId); // Foreign key relationship
+                .HasForeignKey(c => c.CityId); // Foreign key
+            
+            modelBuilder.Entity<PatientsClinics>()
+                .HasOne(pc => pc.Patient)
+                .WithOne(p => p.PatientsClinics)
+                .HasForeignKey<PatientsClinics>(pc => pc.PatientId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PatientsClinics>()
+                .HasOne(pc => pc.Clinic)
+                .WithMany()
+                .HasForeignKey(pc => pc.ClinicId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+          
         }
 
         //public void OnModelCreating(ModelBuilder modelBuilder)

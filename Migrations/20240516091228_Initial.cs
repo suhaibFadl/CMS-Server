@@ -5,7 +5,7 @@
 namespace ClinicsManagementSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -40,20 +40,6 @@ namespace ClinicsManagementSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PatientsClinics",
-                columns: table => new
-                {
-                    PatientsClinicsId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FileNo = table.Column<int>(type: "int", nullable: false),
-                    FileStatus = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PatientsClinics", x => x.PatientsClinicsId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Clinics",
                 columns: table => new
                 {
@@ -73,23 +59,61 @@ namespace ClinicsManagementSystem.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PatientsClinics",
+                columns: table => new
+                {
+                    FileNo = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PatientId = table.Column<int>(type: "int", nullable: false),
+                    ClinicId = table.Column<int>(type: "int", nullable: false),
+                    FileStatus = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PatientsClinics", x => x.FileNo);
+                    table.ForeignKey(
+                        name: "FK_PatientsClinics_Clinics_ClinicId",
+                        column: x => x.ClinicId,
+                        principalTable: "Clinics",
+                        principalColumn: "ClinicId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PatientsClinics_Patients_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "Patients",
+                        principalColumn: "PatientId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Clinics_CityId",
                 table: "Clinics",
                 column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PatientsClinics_ClinicId",
+                table: "PatientsClinics",
+                column: "ClinicId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PatientsClinics_PatientId",
+                table: "PatientsClinics",
+                column: "PatientId",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "PatientsClinics");
+
+            migrationBuilder.DropTable(
                 name: "Clinics");
 
             migrationBuilder.DropTable(
                 name: "Patients");
-
-            migrationBuilder.DropTable(
-                name: "PatientsClinics");
 
             migrationBuilder.DropTable(
                 name: "Cities");

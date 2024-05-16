@@ -1,4 +1,7 @@
-﻿namespace ClinicsSystem.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ClinicsSystem.Models
 {
     public enum FileStatus
     {
@@ -9,10 +12,14 @@
 
     public class PatientsClinics
     {
-        public int PatientsClinicsId { get; set; }
+        [Key]
         public int FileNo { get; set; }
-        public required Patient patient;
-        public required Clinic clinic;       
+        [ForeignKey("Patient")]
+        public int PatientId { get; set; }
+        public  Patient? Patient { get; set; }
+        [ForeignKey("Clinic")]
+        public int ClinicId { get; set; }
+        public  Clinic? Clinic { get; set; }    
         public FileStatus FileStatus { get; set; }
         public DateTime EntryDate;
         public DateTime ExitDate;

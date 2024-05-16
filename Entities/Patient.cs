@@ -1,4 +1,6 @@
-﻿namespace ClinicsSystem.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ClinicsSystem.Models
 {
     public class Patient
     {
@@ -6,8 +8,9 @@
         public string? Name { get; set; }
         public int NationalNo { get; set; }
         public int PassportNo { get; set; }
+        [ForeignKey("PatientsClinic")]
         public int FileNo { get; set; }
-        public required Clinic clinic;
 
+        public PatientsClinics? PatientsClinics { get; set; }
     }
 }
