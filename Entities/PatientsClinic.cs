@@ -21,7 +21,13 @@ namespace ClinicsSystem.Models
         public int ClinicId { get; set; }
         public  Clinic? Clinic { get; set; }    
         public FileStatus FileStatus { get; set; }
-        public DateTime EntryDate;
-        public DateTime ExitDate;
+        public DateTime EntryDate { get; set; }
+        public DateTime ExitDate { get; set; }
+
+        
+        public PatientsClinics()
+        {
+            EntryDate = DateTime.Now; 
+        }
     }
 }

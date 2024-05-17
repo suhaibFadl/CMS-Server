@@ -48,20 +48,31 @@ public class PatientsClinicsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<PatientsClinics>> PostPatientsClinics(PatientsClinics patientsClinics)
     {
-        var patientExists = await _context.Patients.AnyAsync(p => p.PatientId == patientsClinics.PatientId);
-        var clinicExists = await _context.Clinics.AnyAsync(c => c.ClinicId == patientsClinics.ClinicId);
-
-        if (!patientExists)
+        // Check if the patient exists
+        var patient = await _context.Patients.FindAsync(patientsClinics.PatientId);
+        if (patient == null)
         {
             return NotFound($"Patient with ID {patientsClinics.PatientId} not found.");
         }
 
-        if (!clinicExists)
+        // Check if the clinic exists
+        var clinic = await _context.Clinics.FindAsync(patientsClinics.ClinicId);
+        if (clinic == null)
         {
             return NotFound($"Clinic with ID {patientsClinics.ClinicId} not found.");
         }
 
+        // Update the patient's FileNo to match the new PatientsClinics FileNo
+        patient.FileNo = patientsClinics.FileNo;
+
+        // Add the PatientsClinics entity
         _context.PatientsClinics.Add(patientsClinics);
+
+        // Update the patient entity
+        //_context.Patients.Update(patient);
+        _context.Entry(patient).State = EntityState.Modified;
+
+        // Save changes in a single transaction
         await _context.SaveChangesAsync();
 
         // Reload the patientsClinics object to include the related entities
