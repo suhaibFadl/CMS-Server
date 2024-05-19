@@ -28,13 +28,29 @@ public class PatientsClinicsController : ControllerBase
     }
 
     // GET: api/PatientsClinics/5
-    [HttpGet("{id}")]
+    [HttpGet("by-id/{id}")]
     public async Task<ActionResult<PatientsClinics>> GetPatientsClinics(int id)
     {
         var patientsClinics = await _context.PatientsClinics
                                             .Include(pc => pc.Patient)
                                             .Include(pc => pc.Clinic)
                                             .FirstOrDefaultAsync(pc => pc.FileNo == id);
+
+        if (patientsClinics == null)
+        {
+            return NotFound();
+        }
+
+        return patientsClinics;
+    }
+
+    [HttpGet("by-name/{name}")]
+    public async Task<ActionResult<PatientsClinics>> GetPatientsClinics(string name)
+    {
+        var patientsClinics = await _context.PatientsClinics
+                                            .Include(pc => pc.Patient)
+                                            .Include(pc => pc.Clinic)
+                                            .FirstOrDefaultAsync(pc => pc.Patient!.Name == name);
 
         if (patientsClinics == null)
         {
