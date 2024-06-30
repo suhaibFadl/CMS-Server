@@ -37,8 +37,19 @@ public class PatientsController : ControllerBase
         return patient;
     }
 
-    // POST: api/Patients
-    [HttpPost]
+    [HttpGet("by-name")]
+    public async Task<ActionResult<Patient?>> GetPatientByName(string name)
+    {
+        var patient = await _context.Patients
+                                    .Include(p => p.PatientsClinics)
+                                    .ThenInclude(pc => pc.Clinic)
+                                    .FirstOrDefaultAsync(p => p.Name == name);
+        return patient;
+    }
+
+
+// POST: api/Patients
+[HttpPost]
     public async Task<ActionResult<Patient>> PostPatient(Patient patient)
     {
         _context.Patients.Add(patient);

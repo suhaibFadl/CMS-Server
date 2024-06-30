@@ -15,5 +15,7 @@ namespace ClinicsSystem.Models
         // Navigation property
         public City? City { get; set; }
 
+        public ICollection<PatientsClinics> PatientsClinics { get; set; } = new List<PatientsClinics>();
+
     }
 }

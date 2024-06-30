@@ -4,6 +4,7 @@ using ClinicsManagementSystem.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClinicsManagementSystem.Migrations
 {
     [DbContext(typeof(CMSContext))]
-    partial class CMSContextModelSnapshot : ModelSnapshot
+    [Migration("20240626145254_UpdatePatientClinicRelationship")]
+    partial class UpdatePatientClinicRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,7 +131,7 @@ namespace ClinicsManagementSystem.Migrations
             modelBuilder.Entity("ClinicsSystem.Models.PatientsClinics", b =>
                 {
                     b.HasOne("ClinicsSystem.Models.Clinic", "Clinic")
-                        .WithMany("PatientsClinics")
+                        .WithMany()
                         .HasForeignKey("ClinicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -147,11 +150,6 @@ namespace ClinicsManagementSystem.Migrations
             modelBuilder.Entity("ClinicsSystem.Models.City", b =>
                 {
                     b.Navigation("Clinics");
-                });
-
-            modelBuilder.Entity("ClinicsSystem.Models.Clinic", b =>
-                {
-                    b.Navigation("PatientsClinics");
                 });
 
             modelBuilder.Entity("ClinicsSystem.Models.Patient", b =>

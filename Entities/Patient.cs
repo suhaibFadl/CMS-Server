@@ -8,9 +8,7 @@ namespace ClinicsSystem.Models
         public string? Name { get; set; }
         public int NationalNo { get; set; }
         public int PassportNo { get; set; }
-        [ForeignKey("PatientsClinic")]
-        public int FileNo { get; set; }
 
-        public PatientsClinics? PatientsClinics { get; set; }
+        public ICollection<PatientsClinics> PatientsClinics { get; set; } = new List<PatientsClinics>();
     }
 }

@@ -17,24 +17,27 @@ namespace ClinicsManagementSystem.Entities
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Clinic>()
-                .HasOne(c => c.City) // Clinic has one City
-                .WithMany(city => city.Clinics) // City has many Clinics
-                .HasForeignKey(c => c.CityId); // Foreign key
-            
+                .HasOne(c => c.City)
+                .WithMany(city => city.Clinics)
+                .HasForeignKey(c => c.CityId);
+
             modelBuilder.Entity<PatientsClinics>()
                 .HasOne(pc => pc.Patient)
-                .WithOne(p => p.PatientsClinics)
-                .HasForeignKey<PatientsClinics>(pc => pc.PatientId)
+                .WithMany(p => p.PatientsClinics)
+                .HasForeignKey(pc => pc.PatientId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<PatientsClinics>()
                 .HasOne(pc => pc.Clinic)
-                .WithMany()
+                .WithMany(p => p.PatientsClinics)
                 .HasForeignKey(pc => pc.ClinicId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-          
-        }
+            modelBuilder.Entity<PatientsClinics>()
+            .HasIndex(pc => new { pc.PatientId, pc.ClinicId })
+            .IsUnique();
+            } 
+
 
         //public void OnModelCreating(ModelBuilder modelBuilder)
         //{

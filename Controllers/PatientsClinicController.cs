@@ -44,58 +44,47 @@ public class PatientsClinicsController : ControllerBase
         return patientsClinics;
     }
 
-    [HttpGet("by-name/{name}")]
-    public async Task<ActionResult<PatientsClinics>> GetPatientsClinics(string name)
+    [HttpGet("by-patientId-and-clinicId")]
+    public async Task<PatientsClinics?> GetPatientsClinics(int patientId, int clinicId)
     {
         var patientsClinics = await _context.PatientsClinics
                                             .Include(pc => pc.Patient)
                                             .Include(pc => pc.Clinic)
-                                            .FirstOrDefaultAsync(pc => pc.Patient!.Name == name);
+                                            .FirstOrDefaultAsync(pc => pc.Patient!.PatientId == patientId && pc.Clinic!.ClinicId == clinicId);
 
-        if (patientsClinics == null)
-        {
-            return NotFound();
-        }
+        return patientsClinics; // Will return null if no match is found
+    } 
 
-        return patientsClinics;
+    [HttpGet("by-name")]
+    public async Task<ActionResult<List<PatientsClinics>>> GetPatientsClinics(string name)
+    {
+        var patientsClinics = await _context.PatientsClinics
+                                        .Include(pc => pc.Patient)
+                                        .Include(pc => pc.Clinic)
+                                        .Where(pc => pc.Patient!.Name == name)
+                                        .ToListAsync();
+  
+        return patientsClinics; // Will return null if no match is found
     }
 
     // POST: api/PatientsClinics
-    [HttpPost]
+   [HttpPost]
     public async Task<ActionResult<PatientsClinics>> PostPatientsClinics(PatientsClinics patientsClinics)
     {
-        // Check if the patient exists
-        var patient = await _context.Patients.FindAsync(patientsClinics.PatientId);
-        if (patient == null)
+        // Check if an entry with the same PatientId and ClinicId already exists
+        var existingEntry = await _context.PatientsClinics
+                                          .FirstOrDefaultAsync(pc => pc.PatientId == patientsClinics.PatientId && pc.ClinicId == patientsClinics.ClinicId);
+
+        if (existingEntry != null)
         {
-            return NotFound($"Patient with ID {patientsClinics.PatientId} not found.");
+            // If such an entry exists, return a conflict response
+            return Conflict("A record with the same PatientId and ClinicId already exists.");
         }
 
-        // Check if the clinic exists
-        var clinic = await _context.Clinics.FindAsync(patientsClinics.ClinicId);
-        if (clinic == null)
-        {
-            return NotFound($"Clinic with ID {patientsClinics.ClinicId} not found.");
-        }
-
-        // Update the patient's FileNo to match the new PatientsClinics FileNo
-        patient.FileNo = patientsClinics.FileNo;
-
-        // Add the PatientsClinics entity
         _context.PatientsClinics.Add(patientsClinics);
-
-        // Update the patient entity
-        //_context.Patients.Update(patient);
-        _context.Entry(patient).State = EntityState.Modified;
-
-        // Save changes in a single transaction
         await _context.SaveChangesAsync();
 
-        // Reload the patientsClinics object to include the related entities
-        _context.Entry(patientsClinics).Reference(pc => pc.Patient).Load();
-        _context.Entry(patientsClinics).Reference(pc => pc.Clinic).Load();
-
-        return CreatedAtAction("GetPatientsClinics", new { id = patientsClinics.FileNo }, patientsClinics);
+        return CreatedAtAction(nameof(GetPatientsClinics), new { id = patientsClinics.FileNo }, patientsClinics);
     }
 
     // PUT: api/PatientsClinics/5
