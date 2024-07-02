@@ -5,9 +5,8 @@ namespace ClinicsSystem.Models
 {
     public enum FileStatus
     {
-        NotOpen,
-        Open,
-        Closed
+        Closed,
+        Open
     }
 
     public class PatientsClinics
@@ -25,12 +24,8 @@ namespace ClinicsSystem.Models
 
         public FileStatus FileStatus { get; set; }
         public DateTime EntryDate { get; set; }
-        public DateTime ExitDate { get; set; }
+        public DateTime? ExitDate { get; set; }
 
-        public PatientsClinics()
-        {
-            EntryDate = DateTime.Now;
-        }
     }
 }
 

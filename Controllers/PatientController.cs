@@ -92,12 +92,17 @@ public class PatientsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletePatient(int id)
     {
-        var patient = await _context.Patients.FindAsync(id);
+        var patient = await _context.Patients.Include(p => p.PatientsClinics).FirstOrDefaultAsync(p => p.PatientId == id);
+
         if (patient == null)
         {
             return NotFound();
         }
 
+         if (patient.PatientsClinics.Any())
+        {
+            return Conflict("Cannot delete patient as it has related patients clinics.");
+        }
         _context.Patients.Remove(patient);
         await _context.SaveChangesAsync();
 

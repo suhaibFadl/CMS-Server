@@ -98,18 +98,26 @@ namespace ClinicsManagementSystem.Controllers
 
         // DELETE: api/PaymentDetail/5
         [HttpDelete("{id}")]
+
         public async Task<IActionResult> DeleteCity(int id)
         {
             if (_context.Cities == null)
             {
                 return NotFound();
             }
-            var paymentDetail = await _context.Cities.FindAsync(id);
-            if (paymentDetail == null)
+
+            var city = await _context.Cities.Include(c => c.Clinics).FirstOrDefaultAsync(c => c.CityId == id);
+            if (city == null)
             {
                 return NotFound();
             }
-            _context.Cities.Remove(paymentDetail);
+
+            if (city.Clinics.Any())
+            {
+                return Conflict("Cannot delete clinic as it has related Clinics.");
+            }
+
+            _context.Cities.Remove(city);
             await _context.SaveChangesAsync();
 
             return Ok(await _context.Cities.ToListAsync());
