@@ -90,6 +90,13 @@ namespace ClinicsManagementSystem.Controllers
             {
                 return Problem("Entity set 'PaymentDetailContext.PaymentDetails'  is null.");
             }
+
+            var existingCity = await _context.Cities.FirstOrDefaultAsync(c => c.Name == city.Name);
+            if (existingCity != null)
+            {
+                return Conflict(new { message = "A city with the same name already exists." });
+            }
+
             _context.Cities.Add(city);
             await _context.SaveChangesAsync();
 
